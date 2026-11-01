@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Скан чека</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  /* Colors follow the Telegram theme of the user's app. */
+  :root {
+    --bg: var(--tg-theme-bg-color, #ffffff);
+    --fg: var(--tg-theme-text-color, #1d1d1b);
+    --muted: var(--tg-theme-hint-color, #8a8a85);
+    --btn: var(--tg-theme-button-color, #2481cc);
+    --btn-fg: var(--tg-theme-button-text-color, #ffffff);
+  }
+  html, body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.5 -apple-system, system-ui, sans-serif; }
+  main { max-width: 420px; margin: 0 auto; padding: 40px 16px; text-align: center; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { color: var(--muted); margin: 0 0 24px; }
+  button { width: 100%; padding: 14px; border: 0; border-radius: 12px; background: var(--btn); color: var(--btn-fg); font: inherit; font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Скан чека</h1>
+  <p id="status">Открываю камеру…</p>
+  <button id="scan" type="button">Сканировать</button>
+</main>
+<script>
+  // Mini App of finbot. Opens Telegram's native QR scanner, waits for the fiscal QR of a
+  // receipt (54-ФЗ: "t=...&s=...&fn=..."), passes its text to the bot and closes.
+  // sendData works only when the app is opened from the bot's keyboard button.
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const statusEl = document.getElementById("status");
+  const scanButton = document.getElementById("scan");
+
+  function isReceiptQr(text) {
+    const params = new URLSearchParams(text.trim());
+    return /^\d{8}T\d{4}(\d{2})?$/.test(params.get("t") || "") && params.has("s") && params.has("fn");
+  }
+
+  function scan() {
+    if (!tg || !tg.isVersionAtLeast || !tg.isVersionAtLeast("6.4")) {
+      statusEl.textContent = "Откройте эту страницу кнопкой «📷 Сканировать чек» в чате с ботом.";
+      return;
+    }
+    statusEl.textContent = "Наведите камеру на QR чека.";
+    tg.showScanQrPopup({ text: "QR чека — нижний, рядом с ФН, ФД, ФП" }, (text) => {
+      if (!isReceiptQr(text)) {
+        // Tips/loyalty QR on the same receipt: keep the scanner open and wait for the right one.
+        statusEl.textContent = "Это не QR чека. Наведите на нижний QR, рядом с ФН/ФД/ФП.";
+        return false;
+      }
+      if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred("success");
+      tg.sendData(text.trim()); // closes the Mini App; the bot replies in the chat
+      return true;
+    });
+  }
+
+  if (tg) {
+    tg.ready();
+    tg.onEvent("scanQrPopupClosed", () => {
+      statusEl.textContent = "Сканер закрыт. Нажмите «Сканировать», чтобы попробовать ещё раз.";
+    });
+  }
+  scanButton.addEventListener("click", scan);
+  scan();
+</script>
+</body>
+</html>
