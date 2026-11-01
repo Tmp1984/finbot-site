@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>finbot — privacy</title>
+<style>
+  :root { --bg: #fafaf8; --fg: #1d1d1b; --muted: #6b6b66; --link: #2457c5; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #161615; --fg: #ececea; --muted: #a3a39e; --link: #8fb0ff; } }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 -apple-system, system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 48px 16px; }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin-top: 32px; }
+  p.lead { color: var(--muted); margin-top: 0; }
+  a { color: var(--link); }
+  hr { border: 0; border-top: 1px solid color-mix(in srgb, var(--fg) 15%, transparent); margin: 32px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Политика конфиденциальности finbot</h1>
+  <p class="lead">Действует с 1 ноября 2026 года.</p>
+
+  <p>finbot — личный бот одного человека (владельца). Других пользователей у него нет: сообщения от всех, кроме владельца, бот игнорирует и никак не обрабатывает.</p>
+
+  <h2>Какие данные обрабатываются</h2>
+  <ul>
+    <li>сообщения, фото чеков и PDF-выписки, которые владелец сам отправляет боту в Telegram;</li>
+    <li>одна Google-таблица учёта владельца — бот читает её и дописывает строки;</li>
+    <li>файлы на Google Диске, созданные самим ботом (папки для чеков и выписок). К остальным файлам Диска у бота нет доступа (scope <code>drive.file</code>).</li>
+  </ul>
+
+  <h2>Где хранятся данные</h2>
+  <p>Результаты работы записываются только в Google-таблицу и на Google Диск владельца. Бот работает на сервере владельца; там хранятся только ключи доступа и служебная база, защищающая от повторной обработки сообщений.</p>
+
+  <h2>Кому передаются данные</h2>
+  <p>Никому. Данные не продаются, не используются для рекламы и не передаются третьим лицам. Данные, полученные через API Google, используются только для перечисленных выше функций и соответствуют <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, включая требования Limited Use.</p>
+
+  <h2>Как отозвать доступ</h2>
+  <p>Доступ к Google отзывается на странице <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>, доступ к боту — командой <code>/revoke</code> в @BotFather.</p>
+
+  <h2>Контакт</h2>
+  <p><a href="mailto:delavieilleroche@gmail.com">delavieilleroche@gmail.com</a></p>
+
+  <hr>
+  <div lang="en">
+    <h2>Summary in English</h2>
+    <p>finbot is a private bot used by a single person, its owner; it ignores everyone else. It processes only what the owner sends it, reads and appends to the owner's own Google Sheet, and accesses only Drive files it created itself (<code>drive.file</code>). Data is stored only in the owner's Google account and on the owner's server, is never sold or shared with third parties, and its use of Google user data complies with the Google API Services User Data Policy, including the Limited Use requirements. Revoke access at myaccount.google.com/permissions. Contact: delavieilleroche@gmail.com.</p>
+  </div>
+  <p><a href="index.html">← finbot</a></p>
+</main>
+</body>
+</html>
